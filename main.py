@@ -64,22 +64,20 @@ async def predict_all_endpoint(file: UploadFile = File(...)):
         murmur_result = predict_murmur(temp_path)
         murmur_class = murmur_result["predicted_class"]
 
-        result = {
-            "Murmur": murmur_class,
-            "Murmur Timing": "N/A",
-            "Murmur Quality": "N/A",
-            "Murmur Shape": "N/A",
-            "Murmur Pitch": "N/A",
-            "Murmur Grade": "N/A"
-        }
+        # Initialize result with just murmur detection
+        result = {"Murmur": murmur_class}
 
-        # Step 2: If murmur is present, run others
+        # Step 2: Only if murmur is present, add other details
         if murmur_class == "Present":
-            result["Murmur Timing"] = predict_murmur_timing(temp_path)["predicted_class"]
-            result["Murmur Quality"] = predict_murmur_quality(temp_path)["predicted_class"]
-            result["Murmur Shape"] = predict_murmur_shape(temp_path)["predicted_class"]
-            result["Murmur Pitch"] = predict_murmur_pitch(temp_path)["predicted_class"]
-            result["Murmur Grade"] = predict_murmur_grading(temp_path)["predicted_class"]
+            result.update({
+                "Murmur Timing": predict_murmur_timing(temp_path)["predicted_class"],
+                "Murmur Quality": predict_murmur_quality(temp_path)["predicted_class"],
+                "Murmur Shape": predict_murmur_shape(temp_path)["predicted_class"],
+                "Murmur Pitch": predict_murmur_pitch(temp_path)["predicted_class"],
+                "Murmur Grade": predict_murmur_grading(temp_path)["predicted_class"]
+            })
+        else:
+            result["Message"] = "No murmur found - further analysis not performed"
 
         return JSONResponse(content={"Predicted Result": result})
 
