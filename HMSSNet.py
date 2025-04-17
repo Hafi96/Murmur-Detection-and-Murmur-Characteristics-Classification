@@ -108,13 +108,13 @@ class Bottleneck(nn.Module):
 
 
 class Hierachical_MS_Net(nn.Module):
-    def __init__(self, 
-                block: Type[Union[BasicBlock, Bottleneck]] = BasicBlock,
-                stagewise_layers: List[int] = [2, 2, 2, 2],
-                scalewise_inplanes: List[int] = [32, 16, 16],
-                include_patient_data: bool = False,
-                num_classes: int = 2,  # Updated to exclude "Unknown"
-                zero_init_residual: bool = True,
+     def __init__(self, 
+                 num_classes: int, 
+                 block: Type[Union[BasicBlock, Bottleneck]] = BasicBlock,
+                 stagewise_layers: List[int] = [2, 2, 2, 2],
+                 scalewise_inplanes: List[int] = [32, 16, 16],
+                 include_patient_data: bool = False,
+                 zero_init_residual: bool = True,
                 ):
         super().__init__()
         self._norm_layer = nn.BatchNorm2d
